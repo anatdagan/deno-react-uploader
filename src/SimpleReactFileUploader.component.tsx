@@ -1,4 +1,4 @@
-import {React, ReactDOMServer} from './deps.ts'
+import {React} from './deps.ts'
 
 declare global {
   namespace JSX {

@@ -1,14 +1,10 @@
 // Importing Module
-import {upload} from './src/deps.ts';
 import {
     Application,
-
+    upload,
     Router,
     React,
-    ReactDOMServer,
-    Request,
-    Response,
-    NextFunction,
+    ReactDOMServer
   } from "./src/deps.ts";
   
   import App from "./src/app.tsx";
@@ -19,23 +15,21 @@ import {
   const browserBundlePath = "/browser.js";
   
   const js =
-    `import React from "https://dev.jspm.io/react@16.13.1";\nimport ReactDOM from "https://dev.jspm.io/react-dom@16.13.1";\nconst App = ${App};\nconst SimpleReactFileUploader = ${SimpleReactFileUploader};\nReactDOM.hydrate(React.createElement(App), document.body);`;
+    `import React from "https://dev.jspm.io/react@16.13.1";
+     import ReactDOM from "https://dev.jspm.io/react-dom@16.13.1";
+     const App = ${App};
+     const SimpleReactFileUploader = ${SimpleReactFileUploader};
+     ReactDOM.hydrate(React.createElement(App), document.body);`;
   
   const html =
-    `<html><head><script type="module" src="${browserBundlePath}"></script><style>* { font-family: Helvetica; }</style></head><body>${
-      (ReactDOMServer as any).renderToString(<App />)
-    }</body></html>`;
-  
-  // Note that you wouldn't normally need to specify types for `req`, `res` and `next`.
-  // Deno v1.0.1 introduced a bug where it dropped support for `.tsx` files resulting in breaking typescript errors.
-  //
-  // This should be fixed in Deno v1.0.3.
-  //
-  // REF:
-  // - https://github.com/denoland/deno/issues/5776
-  // - https://github.com/denoland/deno/issues/5772
-  // - https://github.com/denoland/deno/pull/5785
-  
+    `<html>
+      <head> 
+        <script type="module" src="${browserBundlePath}"></script>
+        <style>* { font-family: Helvetica; }</style>
+      </head>
+      <body>${(ReactDOMServer as any).renderToString(<App />)}</body>
+    </html>`;
+
   router.get(browserBundlePath, (ctx) => {
     ctx.response.type ="application/javascript"
     ctx.response.body = js;
@@ -56,4 +50,3 @@ import {
   app.use(router.allowedMethods());
   console.log("React SSR App listening on port 3000");
   await app.listen({ port: 3000 });
-  
