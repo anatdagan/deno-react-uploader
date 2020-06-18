@@ -25,14 +25,12 @@ class SimpleReactFileUpload extends (React as any).Component {
   onFormSubmit(e: Event){
     console.log('form submit')
     e.preventDefault() // Stop form submit
-    this.fileUpload(this.state.file).then((response:any)=>{
-      console.log(response.data);
-    })
+    this.fileUpload(this.state.file)
   }
   onChange(e: any) {
     this.setState({file:e.target?.files[0]})
   }
-  fileUpload(file: File){
+  async fileUpload(file: File){
     console.log('file upload')
     const url = 'upload';
     const formData = new FormData();
@@ -42,7 +40,12 @@ class SimpleReactFileUpload extends (React as any).Component {
             'content-type': 'multipart/form-data'
         }
     }
-    return  fetch(url, {method:'post', body:formData}).then(()=>console.log('posted'))
+    var res = await fetch('/upload', { //Fetch API automatically puts the form in the format "multipart/form-data".
+	    method: 'POST',
+	    body: formData,
+    }).then(response=>response.json())
+    console.log(res)
+
   }
 
   render() {

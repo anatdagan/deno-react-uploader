@@ -35,6 +35,7 @@ import {
   // - https://github.com/denoland/deno/issues/5776
   // - https://github.com/denoland/deno/issues/5772
   // - https://github.com/denoland/deno/pull/5785
+  
   router.get(browserBundlePath, (ctx) => {
     ctx.response.type ="application/javascript"
     ctx.response.body = js;
@@ -42,6 +43,7 @@ import {
   .post("/upload", upload('uploads', ['jpg','png'], 20000000, 10000000, true, false, true),
   async (context: any, next: any) => {
     context.response.body = context.uploadedFiles;
+    console.log(context.uploadedFiles)
   },
 )
   .get("/", (ctx) => {
@@ -49,7 +51,9 @@ import {
     ctx.response.body = html;
   });
 
-  
+  // Passing Router as middleware
+  app.use(router.routes());
+  app.use(router.allowedMethods());
+  console.log("React SSR App listening on port 3000");
   await app.listen({ port: 3000 });
   
-  console.log("React SSR App listening on port 3000");
