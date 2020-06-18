@@ -7,6 +7,7 @@ declare global {
       input: any;
       button: any;
       h1: any;
+      span: any;
     }
   }
 }
@@ -16,7 +17,8 @@ class SimpleReactFileUpload extends (React as any).Component {
   constructor(props:any) {
     super(props);
     this.state ={
-      file:null
+      file:null,
+      msg:''
     }
     this.onFormSubmit = this.onFormSubmit.bind(this)
     this.onChange = this.onChange.bind(this)
@@ -40,12 +42,12 @@ class SimpleReactFileUpload extends (React as any).Component {
             'content-type': 'multipart/form-data'
         }
     }
-    var res = await fetch('/upload', { //Fetch API automatically puts the form in the format "multipart/form-data".
+    const res = await fetch('/upload', { //Fetch API automatically puts the form in the format "multipart/form-data".
 	    method: 'POST',
 	    body: formData,
-    }).then(response=>response.json())
-    console.log(res)
-
+    }).then(response=>response.status);
+    const msg = (res===200)? 'Successfully uploaded' : 'Upload failed'
+    this.setState({msg:"   " + msg});
   }
 
   render() {
@@ -53,7 +55,8 @@ class SimpleReactFileUpload extends (React as any).Component {
       <form onSubmit={this.onFormSubmit}>
         <h1>File Upload</h1>
         <input type="file" onChange={this.onChange} />
-        <button type="submit">Upload</button>
+        <button type="submit">Upload</button> 
+        <span id='msg'>{this.state.msg}</span>
       </form>
    )
   }
