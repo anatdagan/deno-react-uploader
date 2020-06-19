@@ -1,5 +1,5 @@
 import {React} from './deps.ts'
-
+//declaring an interface for JSX intrinsic elements (DOM elements)
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -12,6 +12,9 @@ declare global {
   }
 }
 
+/**
+ * A component for uploading files
+ */
 class SimpleReactFileUpload extends (React as any).Component {
 
   constructor(props:any) {
@@ -27,10 +30,14 @@ class SimpleReactFileUpload extends (React as any).Component {
   onFormSubmit(e: Event){
     console.log('form submit')
     e.preventDefault() // Stop form submit
-    this.fileUpload(this.state.file)
+    if (this.state.file)
+      this.fileUpload(this.state.file)
+    else 
+      this.setState({msg:" Upload failed"});
   }
   onChange(e: any) {
-    this.setState({file:e.target?.files[0]})
+    //store file in state, and remove sucess/failure indication
+    this.setState({file:e.target?.files[0], msg:''})
   }
   async fileUpload(file: File){
     console.log('file upload')
@@ -42,12 +49,17 @@ class SimpleReactFileUpload extends (React as any).Component {
             'content-type': 'multipart/form-data'
         }
     }
-    const res = await fetch('/upload', { //Fetch API automatically puts the form in the format "multipart/form-data".
+    fetch('/upload', { //Fetch API automatically puts the form in the format "multipart/form-data".
 	    method: 'POST',
 	    body: formData,
-    }).then(response=>response.status);
-    const msg = (res===200)? 'Successfully uploaded' : 'Upload failed'
-    this.setState({msg:"   " + msg});
+    }).then(response=>{
+      const msg = (response.status===200)? 'Successfully uploaded' : 'Upload failed'
+      //store success/failure indication in state
+      this.setState({msg:"   " + msg});
+    }).catch((reason)=>{
+      console.log("Upload failed", reason)
+      this.setState({msg:"  Upload failed"});
+    })
   }
 
   render() {
