@@ -41,14 +41,8 @@ class SimpleReactFileUpload extends (React as any).Component {
   }
   async fileUpload(file: File){
     console.log('file upload')
-    const url = 'upload';
     const formData = new FormData();
     formData.append('file',file)
-    const config = {
-        headers: {
-            'content-type': 'multipart/form-data'
-        }
-    }
     fetch('/upload', { //Fetch API automatically puts the form in the format "multipart/form-data".
 	    method: 'POST',
 	    body: formData,

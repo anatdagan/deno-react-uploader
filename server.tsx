@@ -6,7 +6,7 @@ import {
     React,
     ReactDOMServer
   } from "./src/deps.ts";
-  // React Modules
+  // React Components
   import App from "./src/app.tsx";
   import SimpleReactFileUploader from './src/SimpleReactFileUploader.component.tsx';
 
